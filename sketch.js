@@ -1,28 +1,35 @@
 var allMyBalls = [];
 var amountOfBalls = 1000;
 var m = false;
+var n = false;
+var s = 60;
 var a = 0;
 var b = 0;
 var c = 0;
 var g = 0;
 var h = 0;
+var r = false;
+var mr = 0;
+var y = false;
+var colorList = [(252, 98, 3),(252, 206, 3),(0,0,0)];
 function preload(){
   // put preload code here
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  frameRate(60)
+  frameRate(60);
+  background("black");
 
   for(var i = 0; i < amountOfBalls; i++) {
     // create istance
     var tempx = random()* windowWidth;  // variabili temporanee (ci sono solo nel ciclo, poi distrutte)
     var tempy = random()* windowHeight;
     //var tempr = random()* 50 + 10;
-    var tempr = 10;
+    var tempr = width/108/2;
     var tempBall = new Ball(tempx, tempy, tempr); // istance
     console.log(tempBall);
-    tempBall.color = color(random()*255, random()*255, random()*255);
+    tempBall.color = color(random()*255, 0, random()*255);
     tempBall.speed = 3;
 
     allMyBalls.push(tempBall);
@@ -32,6 +39,11 @@ function setup() {
 
 function draw() {
   //background("white");
+  // push();
+  // translate(mouseX, mouseY);
+  // rect(0, 0, 50, 50);
+  // pop();
+
   for(var i = 0; i < allMyBalls.length; i++) { // prendo ogni istanza e chiamo  metodo
     var tempBall = allMyBalls[i];
     // a += 1/60;
@@ -47,7 +59,18 @@ function draw() {
 
     tempBall.move();
     tempBall.display();
+    tempBall.colorChange();
+    tempBall.clickColor();
+
   }
+  if (n == true) {
+    tempBall.color = color("green");
+  }
+  push();
+  translate(width/2, height);
+  fill('white');
+  rect(-width/7.8, -height/22, 2*width/7.8, height/22*2, 30)
+  pop();
 
 }
 
@@ -59,7 +82,7 @@ function Ball(_x, _y,_diameter){
   this.y = _y;
   this.speed = 2;
   this.color = 'gold'
-
+  var colorHex = random(colorList);
 
   var xIncrease = 1;  // ora sì
   var yIncrease = 1;
@@ -67,14 +90,10 @@ function Ball(_x, _y,_diameter){
 
   this.move = function() {
 
-    // this.x += xIncrease * this.speed;  // posso cambiare speed dove voglio
-    // this.y += yIncrease * this.speed;
     if (m == true) {
       this.x += xIncrease * this.speed * g;
       this.y += yIncrease * this.speed * h;
     }
-
-
 
 
     if(this.y > windowHeight || this.y < 0) {
@@ -95,7 +114,21 @@ function Ball(_x, _y,_diameter){
     ellipse(0, 0, this.size);
 
     pop();
+  }
+  this.colorChange = function() {
+    if(frameCount > s*2 && m == true && this.x >= mouseX - width/10.8/2 && this.x <= mouseX + width/10.8/2 && this.y <= mouseY + width/10.8/2 && this.y >= mouseY -width/10.8/2) {
+      xIncrease = -xIncrease;
+      yIncrease = -yIncrease;
+      y = true;
+      this.color = color(0, random()*255, random()*255);
 
+    }
+  }
+  this.clickColor = function() {
+    if (r == true) {
+      this.color = 'red';
+
+    }
   }
 }
 function mouseMoved() {
@@ -130,4 +163,16 @@ else if (mouseX > pmouseX){ // dx
 //   h = +1;
 //   g = -1;
 // }
+}
+function mouseReleased() {
+  mr++;
+  if (mr == 1) {
+    r = true;
+  }
+  else {
+    r = false;
+  }
+  if (mr == 2) {
+    mr = 0;
+  }
 }
