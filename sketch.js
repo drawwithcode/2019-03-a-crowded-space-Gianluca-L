@@ -70,6 +70,9 @@ function draw() {
   translate(width/2, height);
   fill('white');
   rect(-width/7.8, -height/22, 2*width/7.8, height/22*2, 30)
+  textSize(width/29/2);
+  fill('black');
+  text("Move, click or drag", -width/13, -height/70);
   pop();
 
 }
